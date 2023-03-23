@@ -26,6 +26,10 @@ class TextEditor:
         italic_button.pack(side='left')
         underline_button = tk.Button(toolbar, text='Underline', command=self.underline_text)
         underline_button.pack(side='left')
+        
+        # Add a "Save" button that calls the save_file method
+        self.save_button = tk.Button(self.master, text='Save', command=self.save_file)
+        self.save_button.pack(side='bottom', fill='x')
 
         # Create a text area for editing text
         self.text = tk.Text(master)
@@ -39,6 +43,7 @@ class TextEditor:
         self.underline = False
         self.font = font.Font(family='Arial', size=12)
 
+
     def open_file(self):
         file_path = filedialog.askopenfilename()
         if file_path:
@@ -47,24 +52,21 @@ class TextEditor:
             self.text.delete('1.0', tk.END)
             self.text.insert('1.0', text)
 
-    def save_file(self):
-        file_path = filedialog.asksaveasfilename(defaultextension='.txt')
-        if file_path:
-            with open(file_path, 'w') as file:
-                text = self.text.get('1.0', tk.END)
-                file.write(text)
 
     def bold_text(self):
         self.bold = not self.bold
         self.update_font()
 
+
     def italic_text(self):
         self.italic = not self.italic
         self.update_font()
 
+
     def underline_text(self):
         self.underline = not self.underline
         self.update_font()
+
 
     def update_font(self):
         new_font = font.Font(family='Arial', size=12, weight='normal', slant='roman', underline=0)
@@ -77,7 +79,19 @@ class TextEditor:
         self.font = new_font
         self.text.tag_configure('font', font=new_font)
         self.text.tag_add('font', '1.0', tk.END)
+        
+        
+    def save_file(self):
+        # Ask the user to choose a file to save to
+        file_path = filedialog.asksaveasfilename(defaultextension='.txt', initialdir='/path/to/local/folder/')
+        if file_path:
+            # If the user selected a file, open it and write the text to it
+            with open(file_path, 'w') as file:
+                text = self.text.get('1.0', tk.END)
+                file.write(text)
 
-root = tk.Tk()
-text_editor = TextEditor(root)
-root.mainloop()
+if __name__ == '__main__':
+    # Create a new tkinter window and initialize a TextEditor instance
+    root = tk.Tk()
+    app = TextEditor(root)
+    root.mainloop()
