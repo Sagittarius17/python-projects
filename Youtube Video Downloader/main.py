@@ -1,4 +1,5 @@
 from pytube import YouTube
+import os
 
 # Step 1: Create a YouTube object with the video URL
 video_url = input("Paste your video URL here-> ")
@@ -8,12 +9,17 @@ yt = YouTube(video_url)
 streams = yt.streams
 
 # Step 3: Choose the stream you want to download
-stream = yt.streams.filter(only_video=True).order_by('resolution').desc().first()
+stream = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
 
-for stream in streams:
-    print(stream)
+# for stream in streams:
+#     print(stream)
 
 # Step 4: Download the video
-stream.download(output_path='/path/to/save/directory')
-
-
+output_path = os.path.join(os.path.expanduser('~'), '/path/to/local/directory')
+print(f"Output path: {output_path}")
+try:
+    stream.download(output_path=output_path)
+    print("Video downloaded successfully.")
+except Exception as e:
+    print("An error occurred during the download:")
+    print(e)
