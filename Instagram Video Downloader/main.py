@@ -1,25 +1,20 @@
-from pytube import YouTube
-import os
+import instaloader
 
-# Step 1: Create a YouTube object with the video URL
-video_url = input("Paste your video URL here-> ")
-yt = YouTube(video_url)
+def download_instagram_video(url):
+    # Create an instance of Instaloader
+    loader = instaloader.Instaloader()
 
-# Step 2: Get a list of available video and audio streams
-streams = yt.streams
+    try:
+        # Retrieve metadata for the specified URL
+        post = instaloader.Post.from_shortcode(loader.context, url)
+        
+        # Download the video
+        loader.download_post(post, target='#downloaded_videos')
+        
+        print("Video downloaded successfully!")
+    except Exception as e:
+        print("Error occurred:", str(e))
 
-# Step 3: Choose the stream you want to download
-stream = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
-
-# for stream in streams:
-#     print(stream)
-
-# Step 4: Download the video
-output_path = os.path.join(os.path.expanduser('~'), '/path/to/local/directory')
-print(f"Output path: {output_path}")
-try:
-    stream.download(output_path=output_path)
-    print("Video downloaded successfully.")
-except Exception as e:
-    print("An error occurred during the download:")
-    print(e)
+# Example usage
+video_url = 'https://www.instagram.com/p/Cr1bnpnAraq/'
+download_instagram_video(video_url)
