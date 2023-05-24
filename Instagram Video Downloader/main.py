@@ -16,5 +16,5 @@ def download_instagram_video(url):
         print("Error occurred:", str(e))
 
 # Example usage
-video_url = 'https://www.instagram.com/p/Cr1bnpnAraq/'
+video_url = 'https://www.instagram.com/reel/CrCBPd3OySG/'
 download_instagram_video(video_url)
