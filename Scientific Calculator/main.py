@@ -62,7 +62,7 @@ while True:
         elif choice == '5':
             print("Result:", power(num1, num2))
         elif choice == '7':
-            if num1 <= 0 or base <= 0:
+            if num1 <= 0 or num2 <= 0:
                 print("Error: Invalid input for logarithm")
             else:
                 print("Result:", logarithm(num1, num2))
