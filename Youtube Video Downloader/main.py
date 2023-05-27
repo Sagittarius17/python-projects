@@ -9,8 +9,8 @@ yt = YouTube(video_url)
 streams = yt.streams
 
 # Step 3: Choose the stream you want to download
-stream = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
-
+stream = yt.streams.filter(progressive=True, file_extension='mp4').get_highest_resolution()
+print(stream)
 # for stream in streams:
 #     print(stream)
 
