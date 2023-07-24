@@ -1,32 +1,23 @@
-import requests
-from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-def get_links(url):
-    # Send a GET request to the URL
-    response = requests.get(url)
-    
-    # If the GET request is successful, the status code will be 200
-    if response.status_code == 200:
-        # Get the content of the response
-        page_content = response.content
+# you need to replace 'your_chrome_driver_path' with the actual path where you have kept the Chrome driver.
+driver = webdriver.Chrome('your_chrome_driver_path')
 
-        # Create a BeautifulSoup object and specify the parser
-        soup = BeautifulSoup(page_content, 'html.parser')
+# We are telling Selenium to get the page of the following url
+driver.get('http://www.example.com')
 
-        # Find all the anchor tags in the HTML
-        # Extract the href attribute and add it to a list
-        links = [a['href'] for a in soup.find_all('a', href=True)]
-        
-        return links
-    else:
-        return f"Failed to retrieve the webpage. Status Code: {response.status_code}"
+# After this line is executed, Chrome Browser will be launched and it will load the URL that we passed.
+try:
+    # Wait until the "article" elements are loaded
+    articles = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'article')))
 
-# Example usage
-url = "https://shuvendusingha.onrender.com"
-links = get_links(url)
+    # Iterating through each article and printing its title
+    for article in articles:
+        print(article.find_element_by_class_name('title').text)
 
-if isinstance(links, list):
-    for link in links:
-        print(link)
-else:
-    print(links)
+finally:
+    # Closing the driver after use
+    driver.quit()
