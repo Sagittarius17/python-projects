@@ -17,7 +17,11 @@ def on_click(btn_text):
         display_var.set(current_text[:-1])
         
     elif btn_text == "%":
-        display_var.set(current_text / 100)
+        try:
+            result = eval(current_text)
+            display_var.set(str(result / 100))
+        except Exception as e:
+            display_var.set("Error")
             
     else:
         display_var.set(current_text + btn_text)
