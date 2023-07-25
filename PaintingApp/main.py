@@ -38,7 +38,7 @@ class PaintApp:
         self.lastx, self.lasty = None, None
         self.color = "black"
         self.eraser_size = 20
-        self.pencil_size = 1
+        self.pencil_size = 2
         self.brush_size = 10
 
     def use_pencil(self):
@@ -57,7 +57,7 @@ class PaintApp:
             elif self.current_tool == "brush":
                 self.canvas.create_oval(event.x - self.brush_size, event.y - self.brush_size, event.x + self.brush_size, event.y + self.brush_size, fill=self.color, outline=self.color)
             elif self.current_tool == "eraser":
-                self.canvas.create_oval(event.x - self.eraser_size, event.y - self.eraser_size, event.x + self.eraser_size, event.y + self.eraser_size, fill="white", outline="white")
+                self.canvas.create_rectangle(event.x - self.eraser_size, event.y - self.eraser_size, event.x + self.eraser_size, event.y + self.eraser_size, fill="white", outline="white")
         self.lastx, self.lasty = event.x, event.y
 
     def save_file(self):
