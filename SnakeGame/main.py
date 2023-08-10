@@ -9,13 +9,23 @@ WHITE = (255, 255, 255)
 RED = (213, 50, 80)
 GREEN = (0, 255, 0)
 BLACK = (0, 0, 0)
+BLUE = (0, 0, 255)
+YELLOW = (255, 255, 0)
 
 # Game dimensions
 WIDTH, HEIGHT = 640, 480
-CELL_SIZE = 20
+CELL_SIZE = 15
+
+# Loading bar for super food
+LOADING_BAR_WIDTH = 100  # Initial width for full lifespan
+LOADING_BAR_HEIGHT = 2  # Height of the loading bar
+LOADING_BAR_COLOR = WHITE  # White color
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Snake Game")
+
+pygame.font.init()
+font = pygame.font.SysFont(None, 35)
 
 # Directions
 LEFT = (-1, 0)
@@ -46,15 +56,25 @@ class Snake:
 def draw_snake(snake):
     for segment in snake.body:
         pygame.draw.rect(screen, GREEN, (segment[0] * CELL_SIZE, segment[1] * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+        
+def display_score(score):
+    score_text = font.render(f"Score: {score}", True, WHITE)
+    screen.blit(score_text, (10, 10))
 
 def main():
+    score = 0
     snake = Snake()
     food = (random.randint(0, (WIDTH // CELL_SIZE) - 1), random.randint(0, (HEIGHT // CELL_SIZE) - 1))
+    super_food = None  # Initially, no super food
+    super_food_timer = 0
     clock = pygame.time.Clock()
     running = True
 
     while running:
         screen.fill(BLACK)
+        
+        # score = len(snake.body) - 3  # initial snake length is 3
+        display_score(score)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -74,7 +94,35 @@ def main():
         # Check if snake ate the food
         if snake.body[0] == food:
             snake.grow()
+            score += 1
             food = (random.randint(0, (WIDTH // CELL_SIZE) - 1), random.randint(0, (HEIGHT // CELL_SIZE) - 1))
+            
+        # Handle super food
+        if super_food and snake.body[0] == super_food:
+            score += super_food_timer
+            snake.grow()
+            super_food = None
+
+        # Randomly spawn super food
+        if not super_food and random.random() < 0.02:  # 2% chance to spawn super food each frame
+            super_food = (random.randint(0, (WIDTH // CELL_SIZE) - 1), random.randint(0, (HEIGHT // CELL_SIZE) - 1))
+            super_food_timer = 100  # Super food will stay for 100 frames
+
+        if super_food:
+            pygame.draw.rect(screen, BLUE, (super_food[0] * CELL_SIZE, super_food[1] * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+            
+            # Draw the loading bar
+            pygame.draw.rect(screen, LOADING_BAR_COLOR, (super_food[0] * CELL_SIZE, (super_food[1] - 1) * CELL_SIZE, LOADING_BAR_WIDTH * (super_food_timer / 100), LOADING_BAR_HEIGHT))
+            
+            if snake.body[0] == super_food:
+                score += super_food_timer  # Add points according to the loading bar's value
+                super_food = None  # Remove super food
+            else:
+                super_food_timer -= 1
+                if super_food_timer <= 0:  # Remove super food after time runs out
+                    super_food = None
+
+
 
         # Check collision with itself
         if snake.collide():
