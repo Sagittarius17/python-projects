@@ -9,7 +9,7 @@ WHITE = (255, 255, 255)
 RED = (213, 50, 80)
 GREEN = (0, 255, 0)
 BLACK = (0, 0, 0)
-BLUE = (0, 0, 255)
+SKYBLUE = (0,181,226)
 YELLOW = (255, 255, 0)
 
 # Game dimensions
@@ -60,8 +60,28 @@ def draw_snake(snake):
 def display_score(score):
     score_text = font.render(f"Score: {score}", True, WHITE)
     screen.blit(score_text, (10, 10))
+    
+HIGH_SCORE_FILE = "SnakeGame/highscore.txt"
+
+def get_high_score():
+    try:
+        with open(HIGH_SCORE_FILE, "r") as file:
+            return int(file.read().strip())
+    except FileNotFoundError:
+        return 0
+    except ValueError:
+        return 0
+
+def save_high_score(score):
+    with open(HIGH_SCORE_FILE, "w") as file:
+        file.write(str(score))
+
+def display_high_score(high_score):
+    high_score_text = font.render(f"High Score: {high_score}", True, WHITE)
+    screen.blit(high_score_text, (WIDTH - 200, 10))
 
 def main():
+    high_score = get_high_score()
     score = 0
     snake = Snake()
     food = (random.randint(0, (WIDTH // CELL_SIZE) - 1), random.randint(0, (HEIGHT // CELL_SIZE) - 1))
@@ -72,9 +92,8 @@ def main():
 
     while running:
         screen.fill(BLACK)
-        
-        # score = len(snake.body) - 3  # initial snake length is 3
         display_score(score)
+        display_high_score(high_score)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -109,7 +128,7 @@ def main():
             super_food_timer = 100  # Super food will stay for 100 frames
 
         if super_food:
-            pygame.draw.rect(screen, BLUE, (super_food[0] * CELL_SIZE, super_food[1] * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+            pygame.draw.circle(screen, SKYBLUE, (int((super_food[0] + 0.5) * CELL_SIZE), int((super_food[1] + 0.5) * CELL_SIZE)), CELL_SIZE // 2)
             
             # Draw the loading bar
             pygame.draw.rect(screen, LOADING_BAR_COLOR, (super_food[0] * CELL_SIZE, (super_food[1] - 1) * CELL_SIZE, LOADING_BAR_WIDTH * (super_food_timer / 100), LOADING_BAR_HEIGHT))
@@ -122,6 +141,10 @@ def main():
                 if super_food_timer <= 0:  # Remove super food after time runs out
                     super_food = None
 
+        # Update high score if needed
+        if score > high_score:
+            high_score = score
+            save_high_score(high_score)
 
 
         # Check collision with itself
