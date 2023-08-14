@@ -2,8 +2,8 @@ import time
 from datetime import datetime as dt
 
 # Hosts file location (use the correct path based on your OS)
-hosts_path = r"C:/Windows/System32/drivers/etc/hosts"  # Linux & MacOS
-# hosts_path = r"C:\Windows\System32\drivers\etc\hosts"  # Uncomment for Windows
+# hosts_path = "/etc/hosts"  # Linux & MacOS
+hosts_path = r"C:/Windows/System32/drivers/etc/hosts"  # Uncomment for Windows
 
 redirect_ip = "127.0.0.1"
 websites_to_block = ["www.shuvendusingha.onrender.com", "shuvendusingha.onrender.com"]  # List of websites you want to block
