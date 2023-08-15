@@ -30,7 +30,7 @@ def handle_connection(conn, addr):
 stream = pa.open(format=pyaudio.paInt16, channels=1, rate=44100, input=True, output=True, frames_per_buffer=1024)
 
 # Play a music file in the chat room
-pygame.mixer.music.load("Play Music\demo.mp3")
+pygame.mixer.music.load("PlayMusic\demo.mp3")
 pygame.mixer.music.play()
 
 # Loop to keep the connection open

@@ -1,7 +1,7 @@
 from PIL import Image, ImageFilter
 
 # Open the image file
-img = Image.open('image-manupulation\grogu.jpg')
+img = Image.open('ImageManipulation\grogu.jpg')
 
 # Resize the image
 width, height = img.size
@@ -17,4 +17,4 @@ img = img.rotate(45)
 img = img.filter(ImageFilter.BLUR)
 
 # Save the manipulated image
-img.save('example_manipulated.jpg')
+img.save('ImageManipulation/manipulated_img.jpg')
